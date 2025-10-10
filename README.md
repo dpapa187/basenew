@@ -71,6 +71,44 @@ Visionary Studio is a full-stack web application that allows creative teams to g
 
 7. Open [http://localhost:3000](http://localhost:3000) in your browser to access Visionary Studio.
 
+## How to test the app
+
+The project does not include automated tests yet, so the recommended way to validate your
+setup is through quick manual checks:
+
+1. **Verify the server is running.** In a new terminal, make a HEAD request and confirm
+   you receive a `200 OK` response:
+
+   ```bash
+   curl -I http://localhost:3000
+   ```
+
+2. **Trigger a sample video render.** In the browser, fill out the prompt form and click
+   **Generate video**. The status indicator should move through _Queued_ → _Processing_
+   → _Completed_, after which the video preview loads. If the status stalls or errors,
+   check the terminal running `npm start` for the detailed fal.ai error payload.
+
+3. **(Optional) Exercise the API directly.** You can also hit the backend from the command
+   line. Replace the `prompt` text with your own creative brief:
+
+   ```bash
+   curl -X POST http://localhost:3000/api/generate \
+     -H "Content-Type: application/json" \
+     -d '{
+       "prompt": "sunset drone shot over alpine lake",
+       "aspectRatio": "16:9",
+       "duration": 5
+     }'
+   ```
+
+   The server returns JSON with a `statusUrl` you can poll (also exposed in the UI) until
+   the render finishes.
+
+4. **(Optional) Test Sign in with Apple.** After providing the Apple credentials in
+   `.env`, click **Connect with Apple** in the sidebar. Apple should redirect you to its
+   consent screen and back to the app showing your profile details. If you encounter
+   issues, double-check the Services ID redirect URL and the private key contents.
+
 ## Project structure
 
 ```
