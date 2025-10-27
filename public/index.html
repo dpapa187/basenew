@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visionary Studio – AI Video Generator</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="hero__content">
+          <h1>Visionary Studio</h1>
+          <p>Create cinematic clips from simple text prompts with the fal.ai video generation pipeline.</p>
+        </div>
+        <div class="hero__badge">Powered by fal.ai</div>
+      </header>
+
+      <main class="main">
+        <section class="panel panel--auth is-hidden" id="apple-auth">
+          <h2>Account access</h2>
+          <p class="panel__subtitle">
+            Connect with Sign in with Apple to securely link your prompts and render history to your Apple ID.
+          </p>
+          <button type="button" class="apple-button" id="apple-signin-btn">
+            <span class="apple-button__icon" aria-hidden="true"></span>
+            <span class="apple-button__label">Continue with Apple</span>
+          </button>
+          <p id="apple-signin-status" class="status status--inline"></p>
+          <div id="apple-profile" class="auth-profile is-hidden">
+            <h3>Apple account connected</h3>
+            <dl class="auth-profile__list" id="apple-profile-details"></dl>
+            <details class="auth-profile__tokens is-hidden" id="apple-token-wrapper">
+              <summary>View token details</summary>
+              <dl class="auth-profile__list" id="apple-token-details"></dl>
+            </details>
+          </div>
+        </section>
+
+        <section class="panel panel--form">
+          <h2>Video Generation Form</h2>
+          <p class="panel__subtitle">Describe your concept and tailor the format. Visionary Studio takes care of the rest.</p>
+          <form id="generator-form" class="form">
+            <label class="field">
+              <span class="field__label">Creative prompt</span>
+              <textarea id="prompt" name="prompt" placeholder="e.g. A drone shot gliding over futuristic skyscrapers at sunset" required></textarea>
+            </label>
+            <div class="field-group">
+              <label class="field">
+                <span class="field__label">Aspect ratio</span>
+                <select id="aspectRatio" name="aspectRatio" required>
+                  <option value="16:9">16:9 – Landscape</option>
+                  <option value="9:16">9:16 – Portrait</option>
+                  <option value="1:1">1:1 – Square</option>
+                </select>
+              </label>
+              <label class="field">
+                <span class="field__label">Duration</span>
+                <select id="duration" name="duration" required>
+                  <option value="5">5 seconds</option>
+                  <option value="10">10 seconds</option>
+                </select>
+              </label>
+            </div>
+            <button type="submit" class="button" id="generate-btn">
+              <span class="button__label">Generate video</span>
+              <span class="button__spinner" aria-hidden="true"></span>
+            </button>
+            <p class="form__hint">Need inspiration? Try describing the mood, camera angles, and motion you envision.</p>
+          </form>
+        </section>
+
+        <section class="panel panel--results">
+          <div class="panel__header">
+            <h2>Latest render</h2>
+            <button class="button button--ghost" id="clear-history" type="button">Clear history</button>
+          </div>
+          <div id="status" role="status" aria-live="polite" class="status"></div>
+          <div id="result" class="result hidden">
+            <video id="result-video" class="result__video" controls playsinline></video>
+            <div class="result__meta">
+              <div>
+                <h3>Prompt</h3>
+                <p id="result-prompt"></p>
+              </div>
+              <ul class="result__info" id="result-info"></ul>
+            </div>
+            <div class="result__actions">
+              <a id="download-link" class="button button--secondary" href="#" target="_blank" rel="noopener">Download video</a>
+            </div>
+          </div>
+          <div id="history" class="history"></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Built for creative teams seeking fast ideation. Configure your fal.ai credentials in the server to start rendering.</p>
+      </footer>
+    </div>
+
+    <script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js" defer></script>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
