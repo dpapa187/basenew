@@ -1,0 +1,150 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://player.gd" id="1"]
+[ext_resource type="Script" path="res://platform_generator.gd" id="2"]
+[ext_resource type="Script" path="res://ui_manager.gd" id="3"]
+
+[sub_resource type="CapsuleShape2D" id="1"]
+radius = 12.0
+height = 40.0
+
+[sub_resource type="RectangleShape2D" id="2"]
+size = Vector2(48, 48)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("2")
+
+[node name="Background" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+
+[node name="Layer" type="ParallaxLayer" parent="Background"]
+motion_scale = Vector2(0.2, 0.2)
+
+[node name="Sky" type="ColorRect" parent="Background/Layer"]
+offset_left = -640.0
+offset_top = -360.0
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0.09, 0.04, 0.18, 1)
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="Ladders" type="Node2D" parent="."]
+
+[node name="Collectibles" type="Node2D" parent="."]
+
+[node name="Obstacles" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("1")
+position = Vector2(0, 200)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Player"]
+animation = "idle"
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Player"]
+shape = SubResource("1")
+
+[node name="LadderDetector" type="Area2D" parent="Player"]
+monitoring = true
+monitorable = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="DetectorShape" type="CollisionShape2D" parent="Player/LadderDetector"]
+shape = SubResource("2")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+offset = Vector2(0, -120)
+limit_left = -9999
+limit_right = 9999
+limit_bottom = 9999
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 5.0
+
+[node name="ObstacleSpawnTimer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = false
+autostart = true
+
+[node name="DifficultyTimer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = false
+autostart = true
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+autoplay = true
+
+[node name="SFX" type="Node" parent="."]
+
+[node name="Jump" type="AudioStreamPlayer" parent="SFX"]
+
+[node name="Pickup" type="AudioStreamPlayer" parent="SFX"]
+
+[node name="Hit" type="AudioStreamPlayer" parent="SFX"]
+
+[node name="Tip" type="AudioStreamPlayer" parent="SFX"]
+
+[node name="Chime" type="AudioStreamPlayer" parent="SFX"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("3")
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+position = Vector2(16, 16)
+text = "Floor: 0  |  Ideas: 0"
+
+[node name="TipPopup" type="Panel" parent="UI"]
+visible = false
+position = Vector2(120, 100)
+size = Vector2(400, 160)
+
+[node name="TipLabel" type="RichTextLabel" parent="UI/TipPopup"]
+size = Vector2(380, 140)
+text = ""
+
+[node name="EmailModal" type="Panel" parent="UI"]
+visible = false
+position = Vector2(80, 60)
+size = Vector2(480, 260)
+
+[node name="EmailLabel" type="RichTextLabel" parent="UI/EmailModal"]
+position = Vector2(16, 16)
+size = Vector2(448, 80)
+text = "🔥 Unlock DPAPA’s Bonus Stack! Enter your email to continue climbing."
+
+[node name="EmailLineEdit" type="LineEdit" parent="UI/EmailModal"]
+position = Vector2(32, 120)
+size = Vector2(416, 32)
+
+[node name="EmailButton" type="Button" parent="UI/EmailModal"]
+position = Vector2(160, 176)
+text = "Continue"
+
+[node name="GameOver" type="Panel" parent="UI"]
+visible = false
+position = Vector2(140, 120)
+size = Vector2(360, 200)
+
+[node name="GameOverLabel" type="RichTextLabel" parent="UI/GameOver"]
+position = Vector2(16, 16)
+size = Vector2(328, 96)
+text = "Game Over!"
+
+[node name="RetryButton" type="Button" parent="UI/GameOver"]
+position = Vector2(60, 132)
+text = "Retry"
+
+[node name="BonusButton" type="Button" parent="UI/GameOver"]
+position = Vector2(190, 132)
+text = "View Bonus"
+
+[node name="FloorLabel" type="Label" parent="UI"]
+visible = false
+
+[connection signal="timeout" from="ObstacleSpawnTimer" to="Main" method="_on_obstacle_spawn"]
+[connection signal="timeout" from="DifficultyTimer" to="Main" method="_on_difficulty_timeout"]
+[connection signal="pressed" from="UI/GameOver/RetryButton" to="UI" method="_on_retry_pressed"]
+[connection signal="pressed" from="UI/GameOver/BonusButton" to="UI" method="_on_bonus_pressed"]
+[connection signal="pressed" from="UI/EmailModal/EmailButton" to="UI" method="_on_email_submit_pressed"]
